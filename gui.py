@@ -64,16 +64,22 @@ search_button = tk.Button(search_frame, text="Search", command=lambda: update_vi
 search_button.pack(side=tk.LEFT)
 # Bonus feature: Filter by vital sign type
 filter_var = tk.StringVar(root)
+filter_var.set("All")  # setting the default value to "All"
 filter_options = tk.OptionMenu(root, filter_var, "All", "Heart Rate", "Blood Pressure")
 filter_options.pack()
-def apply_filter():
+def update_vital_signs(patient_id, canvas, ax1, ax2):
     filter_type = filter_var.get().lower().replace(" ", "_")
     if filter_type == "all":
         filter_type = None
-    update_vital_signs(patient_id_entry.get(), canvas, ax1, ax2, filter_type)
+    plot_vital_signs(patient_id, canvas, ax1, ax2, filter_type)
+    # Schedule the next update
+    root.after(5000, update_vital_signs, patient_id, canvas, ax1, ax2)
 
-filter_button = tk.Button(root, text="Apply Filter", command=apply_filter)
-filter_button.pack()
+# Update the command for the search button
+search_button = tk.Button(search_frame, text="Search", command=lambda: update_vital_signs(patient_id_entry.get(), canvas, ax1, ax2))
+
+# Update the command for the filter button
+filter_button = tk.Button(root, text="Apply Filter", command=lambda: update_vital_signs(patient_id_entry.get(), canvas, ax1, ax2))
 
 # Plot area
 fig = Figure(figsize=(12, 6))
