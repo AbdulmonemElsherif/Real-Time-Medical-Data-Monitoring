@@ -11,8 +11,9 @@ def generate_vital_signs():
     # Simulate generating vital signs data
     heart_rate = random.randint(60, 100)
     blood_pressure = random.randint(80, 120)
-    return {'heart_rate': heart_rate, 'blood_pressure': blood_pressure}
-
+    oxygen_saturation = random.randint(95, 100)  # Normal range is 95-100%
+    body_temperature = random.uniform(36.5, 37.5)  # Normal range is 36.5-37.5°C
+    return {'heart_rate': heart_rate, 'blood_pressure': blood_pressure, 'oxygen_saturation': oxygen_saturation, 'body_temperature': body_temperature}
 def send_data(patient_id):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((SERVER_ADDRESS, SERVER_PORT))
