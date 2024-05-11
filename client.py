@@ -13,17 +13,21 @@ def generate_vital_signs():
     blood_pressure = random.randint(80, 120)
     return {'heart_rate': heart_rate, 'blood_pressure': blood_pressure}
 
-def send_data():
+def send_data(patient_id):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((SERVER_ADDRESS, SERVER_PORT))
         while True:
-            patient_id = random.randint(1, 100)
-            vital_signs = generate_vital_signs()
-            data = {'patient_id': patient_id, 'vital_signs': vital_signs}
-            serialized_data = json.dumps(data)
-            s.sendall(serialized_data.encode())
-            print("Data sent:", serialized_data)
-            time.sleep(5)  # Send data every 5 seconds
+            try:
+                vital_signs = generate_vital_signs()
+                data = {'patient_id': patient_id, 'vital_signs': vital_signs}
+                serialized_data = json.dumps(data)
+                s.sendall(serialized_data.encode())
+                print("Data sent:", serialized_data)
+                time.sleep(5)  # Send data every 5 seconds
+            except ConnectionResetError:
+                print("Connection was closed by the server.")
+                break
 
 if __name__ == "__main__":
-    send_data()
+    patient_id = 1  # Replace with the desired patient ID
+    send_data(patient_id)
